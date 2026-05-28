@@ -1,0 +1,18 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "ChromaPlex Software"
+  navbar:
+    background: primary
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: cyborg
+    toc: true
+    toc-location: left
+    code-fold: true
+    highlight-style: breeze
