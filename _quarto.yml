@@ -4,6 +4,7 @@ project:
 
 website:
   title: ""
+  favicon: assets/images/sCellgen_icon.ico
   navbar:
     logo: assets/images/sCellgen_logo.svg
     background: primary
