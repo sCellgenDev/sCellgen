@@ -1,0 +1,23 @@
+/* Ensure the logo fits nicely in the navbar */
+.navbar-brand img {
+  height: 40px !important; /* Adjust this value to match your desired visual size */
+  width: auto !important;
+  max-height: 100%;
+  padding-left: 400px;
+  padding-right: 20px;
+}
+
+/* Hides the "On this page" text in the sidebar */
+#toc-header {
+  display: none !important;
+}
+
+/* Optional: Removes the top border or extra padding if needed */
+/* nav#TOC {
+  padding-top: 0 !important;
+} */
+
+/* Alternative for hiding TOC header if #toc-header is insufficient */
+#TOC > h2 {
+  display: none !important;
+}

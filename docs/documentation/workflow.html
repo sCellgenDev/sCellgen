@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>workflow</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2ed7f7ae727038b1aa95f4c24ad3a3a6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-a8dce9b896cea3c71b48d10bf222d40f.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2ed7f7ae727038b1aa95f4c24ad3a3a6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d7d307c413fb65b9bc198478a8ed2e51.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-c5d875d2f55a2044a411e298da852c41.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-d7d307c413fb65b9bc198478a8ed2e51.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../assets/images/sCellgen_logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../assets/images/sCellgen_logo.svg" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../documentation/workflow.html" aria-current="page"> 
+<span class="menu-text">Workflow</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../documentation/modules.html"> 
+<span class="menu-text">Module Documentation</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#workflow-overview" id="toc-workflow-overview" class="nav-link active" data-scroll-target="#workflow-overview">Workflow Overview</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a>
+  <ul class="collapse">
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a>
+  <ul class="collapse">
+  <li><a href="#nextflow-installation" id="toc-nextflow-installation" class="nav-link" data-scroll-target="#nextflow-installation">Nextflow Installation</a></li>
+  <li><a href="#containers" id="toc-containers" class="nav-link" data-scroll-target="#containers">Containers</a></li>
+  <li><a href="#scellgenpy-sample-sheet-only-installation" id="toc-scellgenpy-sample-sheet-only-installation" class="nav-link" data-scroll-target="#scellgenpy-sample-sheet-only-installation">Scellgenpy (sample sheet only) installation</a></li>
+  </ul></li>
+  <li><a href="#download-the-workflow" id="toc-download-the-workflow" class="nav-link" data-scroll-target="#download-the-workflow">Download the workflow</a></li>
+  <li><a href="#prepare-references" id="toc-prepare-references" class="nav-link" data-scroll-target="#prepare-references">Prepare references</a></li>
+  </ul></li>
+  <li><a href="#workflow-test-run" id="toc-workflow-test-run" class="nav-link" data-scroll-target="#workflow-test-run">Workflow test run</a>
+  <ul class="collapse">
+  <li><a href="#using-scellgen_generate_mabid_workflow_config-without-docker" id="toc-using-scellgen_generate_mabid_workflow_config-without-docker" class="nav-link" data-scroll-target="#using-scellgen_generate_mabid_workflow_config-without-docker">Using scellgen_generate_mabid_workflow_config without docker</a></li>
+  <li><a href="#using-docker" id="toc-using-docker" class="nav-link" data-scroll-target="#using-docker">Using docker</a></li>
+  <li><a href="#full-workflow-run" id="toc-full-workflow-run" class="nav-link" data-scroll-target="#full-workflow-run">Full workflow run</a></li>
+  </ul></li>
+  <li><a href="#workflow-configuration" id="toc-workflow-configuration" class="nav-link" data-scroll-target="#workflow-configuration">Workflow configuration</a>
+  <ul class="collapse">
+  <li><a href="#configuration-files" id="toc-configuration-files" class="nav-link" data-scroll-target="#configuration-files">Configuration files</a>
+  <ul class="collapse">
+  <li><a href="#reference-genome" id="toc-reference-genome" class="nav-link" data-scroll-target="#reference-genome">Reference Genome</a></li>
+  </ul></li>
+  <li><a href="#sample-configuration" id="toc-sample-configuration" class="nav-link" data-scroll-target="#sample-configuration">Sample configuration</a>
+  <ul class="collapse">
+  <li><a href="#input-directory-structure" id="toc-input-directory-structure" class="nav-link" data-scroll-target="#input-directory-structure">Input Directory Structure</a></li>
+  <li><a href="#gdna-library" id="toc-gdna-library" class="nav-link" data-scroll-target="#gdna-library">gDNA Library</a></li>
+  <li><a href="#gdna-library-with-negative-control-bulk-only" id="toc-gdna-library-with-negative-control-bulk-only" class="nav-link" data-scroll-target="#gdna-library-with-negative-control-bulk-only">gDNA Library with Negative Control (Bulk only)</a></li>
+  </ul></li>
+  <li><a href="#excel-sheet-configuration" id="toc-excel-sheet-configuration" class="nav-link" data-scroll-target="#excel-sheet-configuration">Excel Sheet Configuration</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#adapter-configuration-sheet" id="toc-adapter-configuration-sheet" class="nav-link" data-scroll-target="#adapter-configuration-sheet">Adapter Configuration Sheet</a></li>
+  <li><a href="#tags" id="toc-tags" class="nav-link" data-scroll-target="#tags">Tags</a></li>
+  <li><a href="#dpm-to-target" id="toc-dpm-to-target" class="nav-link" data-scroll-target="#dpm-to-target">DPM to Target</a></li>
+  </ul></li>
+  <li><a href="#excel-single-cell-configuration" id="toc-excel-single-cell-configuration" class="nav-link" data-scroll-target="#excel-single-cell-configuration">Excel Single Cell Configuration</a>
+  <ul class="collapse">
+  <li><a href="#well" id="toc-well" class="nav-link" data-scroll-target="#well">Well</a></li>
+  <li><a href="#well-to-target" id="toc-well-to-target" class="nav-link" data-scroll-target="#well-to-target">Well to Target</a></li>
+  <li><a href="#well-to-sample" id="toc-well-to-sample" class="nav-link" data-scroll-target="#well-to-sample">Well to Sample</a></li>
+  </ul></li>
+  <li><a href="#write-sample-sheet-and-adapter-configuration-files" id="toc-write-sample-sheet-and-adapter-configuration-files" class="nav-link" data-scroll-target="#write-sample-sheet-and-adapter-configuration-files">Write sample sheet and adapter configuration files</a></li>
+  </ul></li>
+  <li><a href="#execution" id="toc-execution" class="nav-link" data-scroll-target="#execution">Execution</a>
+  <ul class="collapse">
+  <li><a href="#profiles" id="toc-profiles" class="nav-link" data-scroll-target="#profiles">Profiles</a></li>
+  </ul></li>
+  <li><a href="#technical" id="toc-technical" class="nav-link" data-scroll-target="#technical">Technical</a>
+  <ul class="collapse">
+  <li><a href="#cut-site-assignment" id="toc-cut-site-assignment" class="nav-link" data-scroll-target="#cut-site-assignment">Cut Site Assignment</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#example-output-tree" id="toc-example-output-tree" class="nav-link" data-scroll-target="#example-output-tree">Example Output Tree</a></li>
+  <li><a href="#output-data" id="toc-output-data" class="nav-link" data-scroll-target="#output-data">Output Data</a>
+  <ul class="collapse">
+  <li><a href="#tagged-bam-files" id="toc-tagged-bam-files" class="nav-link" data-scroll-target="#tagged-bam-files">Tagged BAM files</a></li>
+  <li><a href="#count-tables" id="toc-count-tables" class="nav-link" data-scroll-target="#count-tables">Count Tables</a></li>
+  <li><a href="#normalized-counts" id="toc-normalized-counts" class="nav-link" data-scroll-target="#normalized-counts">Normalized Counts</a></li>
+  <li><a href="#statistics" id="toc-statistics" class="nav-link" data-scroll-target="#statistics">Statistics</a></li>
+  <li><a href="#bigwig-tracks" id="toc-bigwig-tracks" class="nav-link" data-scroll-target="#bigwig-tracks">BigWig tracks</a></li>
+  <li><a href="#multiqc" id="toc-multiqc" class="nav-link" data-scroll-target="#multiqc">MultiQC</a></li>
+  <li><a href="#pipeline-information" id="toc-pipeline-information" class="nav-link" data-scroll-target="#pipeline-information">Pipeline information</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+
+<section id="workflow-overview" class="level1">
+<h1>Workflow Overview</h1>
+<p>Multiplexing Antibodies by barcode Identification (MAbID) is a method for combinatorial genomic profiling of histone modifications and chromatin-binding proteins. MAbID employs antibody-DNA conjugates to integrate barcodes at the genomic location of the epitope, enabling combined incubation of multiple antibodies to reveal the distributions of many epigenetic markers simultaneously.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/images/workflow_diagram.png" class="img-fluid figure-img"></p>
+<figcaption>Workflow Diagram</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="installation" class="level1">
+<h1>Installation</h1>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<p>The workflow requires:</p>
+<ul>
+<li><p>Nextflow to execute the workflow</p></li>
+<li><p>A container engine to run the steps in the workflow ( Singularity, Apptainer or Docker )</p></li>
+<li><p>Python To generate the sample sheet, this can optionally be run from a <a href="#using-docker" title="#using-docker">Docker container</a></p></li>
+</ul>
+<section id="nextflow-installation" class="level3">
+<h3 class="anchored" data-anchor-id="nextflow-installation">Nextflow Installation</h3>
+<ul>
+<li><a href="https://www.nextflow.io/" title="https://www.nextflow.io/">Make sure NextFlow is installed</a></li>
+<li>Make sure Nextflow is available on the PATH</li>
+</ul>
+</section>
+<section id="containers" class="level3">
+<h3 class="anchored" data-anchor-id="containers">Containers</h3>
+<ul>
+<li>All workflow steps (processes) run inside a <strong>Singularity</strong>, <strong>Apptainer</strong> or <strong>Docker</strong> container. Make sure to have one of these container engines available.</li>
+</ul>
+<section id="docker-container-installation" class="level4">
+<h4 class="anchored" data-anchor-id="docker-container-installation">Docker container installation</h4>
+<p>When using <strong>Docker</strong> you need to download and install the Docker container which contains the software for the analysis. <strong>For Singularity and Apptainer this step is not needed!</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span>  https://barbansonbiotech.eu/download/scellgen/containers/mabid/scellgen_mabid_v8.tar.gz</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> load <span class="op">&lt;</span> scellgen_mabid_v8.tar.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span>  https://barbansonbiotech.eu/download/scellgen/containers/mabid/scellgen_mabid_v8.tar.gz</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> load <span class="op">&lt;</span> scellgen_mabid_v8.tar.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="scellgenpy-sample-sheet-only-installation" class="level3">
+<h3 class="anchored" data-anchor-id="scellgenpy-sample-sheet-only-installation">Scellgenpy (sample sheet only) installation</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install https://barbansonbiotech.eu/download/scellgen/sCellgenPythonSampleSheet.zip</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install https://barbansonbiotech.eu/download/scellgen/sCellgenPythonSampleSheet.zip</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can instead of installing sCellGenpy also use Docker.</p>
+</section>
+</section>
+<section id="download-the-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="download-the-workflow">Download the workflow</h2>
+<p>The command below downloads the workflow and enters the workflow folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> https://barbansonbiotech.eu/download/scellgen/workflow/download_workflow.sh  <span class="kw">|</span> <span class="fu">bash</span> <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> scellgenmabidworkflow</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> https://barbansonbiotech.eu/download/scellgen/workflow/download_workflow.sh  <span class="kw">|</span> <span class="fu">bash</span> <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> scellgenmabidworkflow</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="prepare-references" class="level2">
+<h2 class="anchored" data-anchor-id="prepare-references">Prepare references</h2>
+<p>The workflow requires a reference Fasta file and a gene annotation gtf or gff file.</p>
+<p>The test datasets are mouse based.</p>
+<p>In the workflow folder use this command to pull the latest Mouse reference Fasta and annotations from Ensembl:</p>
+<pre><code>./download_reference.sh mus_musculus</code></pre>
+<pre><code>./download_reference.sh mus_musculus</code></pre>
+<p>You can replace <code>mus_musculus</code> with <code>homo_sapiens</code> to download the latest human assembly.</p>
+<hr>
+<hr>
+</section>
+</section>
+<section id="workflow-test-run" class="level1">
+<h1>Workflow test run</h1>
+<p>Small test-sets are available in the folder <code>test_inputs</code> to verify if the workflow runs correctly.</p>
+<p>Make sure you download <a href="#prepare-references" title="#prepare-references">a mouse reference first</a>, this is required for the tests.</p>
+<p>To run bulk gDNA only test samples (fastest test):</p>
+<p>NOTE: you can run the steps in the pipeline using <strong>Docker</strong> or <strong>Singularity / Apptainer</strong>, <a href="#profiles" title="#profiles">this is configured using the <code>-profile</code> flag</a>.</p>
+<pre><code>nextflow run main.nf -profile singularity,test --outdir testrun_bulk_result</code></pre>
+<pre><code>nextflow run main.nf -profile singularity,test --outdir testrun_bulk_result</code></pre>
+<p><img src="../assets/images/nextflow_test_run.png" class="img-fluid"></p>
+<p>If this test passes the workflow works correctly.</p>
+<p>The only remaining hurdle is to prepare your own samplesheets using <code>scellgen_generate_mabid_workflow_config</code>.</p>
+<p>To test if that works correctly:</p>
+<section id="using-scellgen_generate_mabid_workflow_config-without-docker" class="level2">
+<h2 class="anchored" data-anchor-id="using-scellgen_generate_mabid_workflow_config-without-docker">Using scellgen_generate_mabid_workflow_config without docker</h2>
+<pre><code>scellgen_generate_mabid_workflow_config \
+    ./test_inputs/bulk*/*.xlsx \
+    --out testrun_bulk_samplesheet.csv
+
+nextflow run main.nf \
+    -c nextflow.config \
+    --input testrun_bulk_samplesheet.csv \
+    --outdir testrun_bulk_results \
+    -ansi-log false -profile singularity \
+    --fasta references/mus_musculus/115/Mus_musculus.GRCm39.dna_sm.primary_assembly.fa.gz \
+    --gtf references/mus_musculus/115/Mus_musculus.GRCm39.115.gtf.gz</code></pre>
+<pre><code>scellgen_generate_mabid_workflow_config \
+    ./test_inputs/bulk*/*.xlsx \
+    --out testrun_bulk_samplesheet.csv
+
+nextflow run main.nf \
+    -c nextflow.config \
+    --input testrun_bulk_samplesheet.csv \
+    --outdir testrun_bulk_results \
+    -ansi-log false -profile singularity \
+    --fasta references/mus_musculus/115/Mus_musculus.GRCm39.dna_sm.primary_assembly.fa.gz \
+    --gtf references/mus_musculus/115/Mus_musculus.GRCm39.115.gtf.gz</code></pre>
+</section>
+<section id="using-docker" class="level2">
+<h2 class="anchored" data-anchor-id="using-docker">Using docker</h2>
+<p>The command below runs the script scellgen_generate_mabid_workflow_config from a docker container, this is helpful in cases where no Python environment is available.</p>
+<pre><code>docker run -v "$(pwd)":/work -w /work --rm scellgen_mabid:latest scellgen_generate_mabid_workflow_config test_inputs/bulk*/*.xlsx --out testrun_bulk_samplesheet.csv</code></pre>
+<pre><code>docker run -v "$(pwd)":/work -w /work --rm scellgen_mabid:latest scellgen_generate_mabid_workflow_config test_inputs/bulk*/*.xlsx --out testrun_bulk_samplesheet.csv</code></pre>
+</section>
+<section id="full-workflow-run" class="level2">
+<h2 class="anchored" data-anchor-id="full-workflow-run">Full workflow run</h2>
+<p>To run all test sets through the workflow:</p>
+<pre><code>scellgen_generate_mabid_workflow_config \
+    ./test_inputs/*/*.xlsx \
+    --out testrun_full_samplesheet.csv \
+    
+nextflow run main.nf \
+    -c nextflow.config \
+    --input testrun_full_samplesheet.csv \
+    --outdir testrun_full_results \
+    -ansi-log false -profile singularity \
+    --fasta references/mus_musculus/115/Mus_musculus.GRCm39.dna_sm.primary_assembly.fa.gz \
+    --gtf references/mus_musculus/115/Mus_musculus.GRCm39.115.gtf.gz</code></pre>
+<pre><code>scellgen_generate_mabid_workflow_config \
+    ./test_inputs/*/*.xlsx \
+    --out testrun_full_samplesheet.csv
+
+nextflow run main.nf \
+    -c nextflow.config \
+    --input testrun_full_samplesheet.csv \
+    --outdir testrun_full_results -ansi-log false -profile singularity \
+    --fasta references/mus_musculus/115/Mus_musculus.GRCm39.dna_sm.primary_assembly.fa.gz \
+    --gtf references/mus_musculus/115/Mus_musculus.GRCm39.115.gtf.gz</code></pre>
+</section>
+</section>
+<section id="workflow-configuration" class="level1">
+<h1>Workflow configuration</h1>
+<ol type="1">
+<li><a href="#installation" title="#installation">Install the prerequisites of the workflow</a></li>
+<li><a href="#download-the-workflow" title="#download-the-workflow">Download the workflow</a></li>
+<li>Create a folder for each sample in the folder <code>./inputs</code> (Create the folder <code>./inputs</code> if it does not exists)</li>
+<li><a href="#sample-configuration" title="#sample-configuration">For each sample:</a>
+<ul>
+<li>Copy the most applicable template configuration xlsx file from the folder <code>example_configurations</code>, and put it in the sample folder</li>
+<li>Create a folder gDNA for genomic input data</li>
+<li>Copy the reads (<code>fastq.gz</code> files) to the folder gDNA. <strong>The reads from multiple lanes and runs are concatenated automatically by the workflow</strong>.</li>
+<li>Configure the <a href="#excel-sheet-configuration" title="#excel-sheet-configuration">configuration xlsx</a> file</li>
+</ul></li>
+<li>In the workflow folder run <code>scellgen_generate_mabid_workflow_config</code> to generate a sample sheet and adapter configuration files</li>
+<li>Configure the workflow parameters in <code>nextflow.config</code> or via command line arguments</li>
+<li><a href="#execution" title="#execution">Run the workflow</a></li>
+</ol>
+<section id="configuration-files" class="level2">
+<h2 class="anchored" data-anchor-id="configuration-files">Configuration files</h2>
+<p>The global workflow parameters are configured by:</p>
+<p><strong>A)</strong> <code>nextflow.config</code></p>
+<p><strong>B)</strong> Arguments passed to the workflow execution (these take precedence).</p>
+<p>These global parameters control the reference genome used, the filtering and the binning settings.</p>
+<p>Which samples are processed is configured using a samplesheet:</p>
+<p>In this documentation <code>samplesheet.csv</code> is used to store the samplesheet. (Generated using <code>scellgen_generate_mabid_workflow_config</code>)</p>
+<p>Each sample has individual adapter settings, these are stored in</p>
+<p><code>gdna_adapter_config.txt</code>. These files can also be generated using <code>scellgen_generate_mabid_workflow_config</code>.</p>
+<section id="reference-genome" class="level3">
+<h3 class="anchored" data-anchor-id="reference-genome">Reference Genome</h3>
+<p>Configure reference by supplying a fasta file and an annotation file (if using gff provide <em>–gff</em> or if using gtf provide <em>–gtf</em>).</p>
+<pre><code>--fasta /path/to/genome.fa --gtf /path/to/annotations.gtf</code></pre>
+<p>You can also configure the reference genome location in <code>nextflow.config</code></p>
+</section>
+</section>
+<section id="sample-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="sample-configuration">Sample configuration</h2>
+<section id="input-directory-structure" class="level3">
+<h3 class="anchored" data-anchor-id="input-directory-structure">Input Directory Structure</h3>
+<p>The input directory contains the data which is processed by the workflow. (Usually this folder is called <code>inputs/</code>)</p>
+<p>See the folder <code>test_inputs</code> in the workflow folder for a example of the datastructure and settings.</p>
+<p>Each sample is separately stored in a folder. This folder contains an excel sheet with the sample configuration and one or more subdirectories with sequenced reads:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Subfolder</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>gDNA</strong></td>
+<td>Reads with genomic MabID data</td>
+</tr>
+<tr class="even">
+<td><strong>gDNA_negative_control</strong></td>
+<td>Reads from a negative control sample <strong>(BULK ONLY!)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The workflow is configured with one excel sheet per library.</p>
+<p>Each library folder has one configuration.xlsx file which contains the configuration.</p>
+<p>Then a subfolder gDNA with the gDNA reads.</p>
+<p>The following data structure is expected for different library types:</p>
+</section>
+<section id="gdna-library" class="level3">
+<h3 class="anchored" data-anchor-id="gdna-library">gDNA Library</h3>
+<pre><code>BulkLib1
+├── BulkLib1_configuration.xlsx
+└── gDNA
+    ├── R1.fastq.gz
+    └── R2.fastq.gz</code></pre>
+<pre><code>BulkLib1
+├── BulkLib1_configuration.xlsx
+└── gDNA
+    ├── R1.fastq.gz
+    └── R2.fastq.gz</code></pre>
+</section>
+<section id="gdna-library-with-negative-control-bulk-only" class="level3">
+<h3 class="anchored" data-anchor-id="gdna-library-with-negative-control-bulk-only">gDNA Library with Negative Control (Bulk only)</h3>
+<pre><code>BulkLib2
+├── BulkLib2_configuration.xlsx
+├── gDNA
+│&nbsp;&nbsp; ├── R1.fastq.gz
+│&nbsp;&nbsp; └── R2.fastq.gz
+└── gDNA_negative_control
+    ├── R1.fastq.gz
+    └── R2.fastq.gz</code></pre>
+<pre><code>BulkLib2
+├── BulkLib2_configuration.xlsx
+├── gDNA
+│&nbsp;&nbsp; ├── R1.fastq.gz
+│&nbsp;&nbsp; └── R2.fastq.gz
+└── gDNA_negative_control
+    ├── R1.fastq.gz
+    └── R2.fastq.gz</code></pre>
+</section>
+</section>
+<section id="excel-sheet-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="excel-sheet-configuration">Excel Sheet Configuration</h2>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>The summary sheet contains the top level information about the sample and experiment.</p>
+<p><img src="../assets/images/sample_datasheet_summary.png" class="img-fluid"></p>
+</section>
+<section id="adapter-configuration-sheet" class="level3">
+<h3 class="anchored" data-anchor-id="adapter-configuration-sheet">Adapter Configuration Sheet</h3>
+<p>Configure the adapter configuration and the location of the tags found in <strong>READ1</strong> and <strong>READ2</strong> in the adapter configuration sheet.</p>
+<p>The tags are used to determine the originating sample of the read.</p>
+<p>Separate the tag names with a pipe (<strong>|</strong>). When there is a spacer sequence use the tag <strong>SPACER</strong>, the length of the spacer sequence is configured using the <strong>SPACER</strong> cell.</p>
+<p>Leave the field (<strong>READ1</strong>/<strong>READ2</strong>) empty to not capture any tags for the mate.</p>
+<p>Make sure that for <strong>gDNA</strong> you need to capture the <strong>DPM</strong> sequence.</p>
+<p><img src="../assets/images/sample_datasheet_adapter_configuration.png" class="img-fluid"></p>
+<p>The <strong>LAXITY setting</strong> controls the maximum number of bases to look ahead if no tag is initially found.</p>
+<p>The <strong>TRIM_N_DPM_SUFFIX_BASES</strong> will trim N nucleotides after the location where the DPM is found.</p>
+</section>
+<section id="tags" class="level3">
+<h3 class="anchored" data-anchor-id="tags">Tags</h3>
+<p>Configure the used tags in the <strong>Tags</strong> sheet. Tags can be enabled or disabled by changing the column to TRUE or FALSE. More tags can be added by adding rows to this sheet. Make sure to use a CATEGORY which is used in the <a href="#adapter_configuration_sheet" title="#adapter_configuration_sheet">Adapter configuration sheet</a></p>
+<p><img src="../assets/images/sample_datasheet_tags.png" class="img-fluid"></p>
+</section>
+<section id="dpm-to-target" class="level3">
+<h3 class="anchored" data-anchor-id="dpm-to-target">DPM to Target</h3>
+<p>Configure the relationship between the <strong>DPM</strong> and the epigenetic target in the <strong>DPM to target</strong> sheet.</p>
+<p>If the <strong>well</strong> in the 96 well plate is encoding the target and not the DPM, leave this table empty.</p>
+<p><img src="../assets/images/sample_datasheet_dpm2target.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="excel-single-cell-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="excel-single-cell-configuration">Excel Single Cell Configuration</h2>
+<p>The (minimum) difference between the configuration of a bulk and single cell sample is to add tags to the adapter configuration which allow for distinguishing cells. Usually (Odd/Even tags). Then enable single cell analysis by setting <code>is_single_cell</code> to <strong>TRUE</strong></p>
+<p><img src="../assets/images/sample_datasheet_summary_single_cell.png" class="img-fluid"></p>
+<p>To configure a single cell experiment, more settings are available.</p>
+<p>Note that these settings, listed below are all optional.</p>
+<section id="well" class="level3">
+<h3 class="anchored" data-anchor-id="well">Well</h3>
+<p>This sheet encodes what barcode are used to identify the well. Any enabled tag in the <strong>Tags</strong> sheet can be referenced here.</p>
+<p><img src="../assets/images/sample_datasheet_well.png" class="img-fluid"></p>
+</section>
+<section id="well-to-target" class="level3">
+<h3 class="anchored" data-anchor-id="well-to-target">Well to Target</h3>
+<p>This sheet can be used to configure the well location encoding the (epi-)target. This requires the sheet <strong>Well</strong> to be present. You need to remove the sheet when there is no specific target associated with each well (for example, when the <strong>DPM</strong> tag encodes the target).</p>
+<p><img src="../assets/images/sample_datasheet_well2target.png" class="img-fluid"></p>
+</section>
+<section id="well-to-sample" class="level3">
+<h3 class="anchored" data-anchor-id="well-to-sample">Well to Sample</h3>
+<p>This sheet can be used to configure the relationship between the well location and what sample condition. Otherwise the sheet needs to be removed.</p>
+<p><img src="../assets/images/sample_datasheet_well2sample.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="write-sample-sheet-and-adapter-configuration-files" class="level2">
+<h2 class="anchored" data-anchor-id="write-sample-sheet-and-adapter-configuration-files">Write sample sheet and adapter configuration files</h2>
+<p>The workflow requires a <code>samplesheet.csv</code>, and for each library needs a <code>gdna_adapter_config.txt</code> file. This file can created from the library configuration files using the script <code>scellgen_generate_mabid_workflow_config</code>.</p>
+<p>When you have collected all reads and configured all xlsx files into the folder <code>inputs</code> as <a href="#input_directory_structure" title="#input_directory_structure">described here</a>. Then run the command <code>scellgen_generate_mabid_workflow_config ./inputs_full/*/*.xlsx --out samplesheet.csv</code> this writes a single samplesheet based on the excel sheet configuration files and generates <code>gdna_adapter_config.txt</code> file.</p>
+<p>You can still make changes to the <code>*adapter_config.txt</code> files and <code>samplesheet.csv</code> later.</p>
+</section>
+</section>
+<section id="execution" class="level1">
+<h1>Execution</h1>
+<p>To execute the workflow, execute the following command in the workflow folder:</p>
+<pre><code>nextflow run main.nf -c nextflow.config --input samplesheet.csv --outdir results -ansi-log false -profile singularity_slurm --fasta /path/to/genome.fa --gtf /path/to/annotations.gtf</code></pre>
+<pre><code>nextflow run main.nf -c nextflow.config --input samplesheet.csv --outdir results -ansi-log false -profile singularity_slurm --fasta /path/to/genome.fa --gtf /path/to/annotations.gtf</code></pre>
+<section id="profiles" class="level2">
+<h2 class="anchored" data-anchor-id="profiles">Profiles</h2>
+<p>Use <code>-profile singularity</code> or <code>-profile apptainer</code> or <code>-profile docker</code> for local execution.</p>
+<p>Use <code>-profile singularity,slurm</code> to submit jobs to <strong>SLURM</strong> and run the jobs in <strong>Singularity</strong> containers</p>
+<p>Use <code>-profile apptainer,slurm</code> to submit jobs to <strong>SLURM</strong> and run the jobs in <strong>Apptainer</strong> containers</p>
+<p>Use <code>-profile docker,slurm</code> to submit jobs to <strong>SLURM</strong> and run the jobs in <strong>Docker</strong> containers. <a href="#docker_container_installation" title="#docker_container_installation">Requires the docker image to be installed</a></p>
+</section>
+</section>
+<section id="technical" class="level1">
+<h1>Technical</h1>
+<section id="cut-site-assignment" class="level2">
+<h2 class="anchored" data-anchor-id="cut-site-assignment">Cut Site Assignment</h2>
+<p>For each read 1, the most nearby cut site is assigned. The search radius is configurable using the parameters <code>max_motif_distance_upstream</code> and <code>max_motif_distance_downstream</code>. These parameters can be passed to the workflow (e.g.&nbsp;pass <code>--max_motif_distance_upstream 10</code> to the nextflow command) or configured in the <code>nextflow.config</code> file.</p>
+<p>For each read the following sam-tags encode the associated cut site information:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>SamTag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>DS</strong></td>
+<td>Center coordinate of the restriction site</td>
+</tr>
+<tr class="even">
+<td><strong>oD</strong></td>
+<td>Offset to the restriction site in bp</td>
+</tr>
+<tr class="odd">
+<td><strong>RZ</strong></td>
+<td>Motif of the restriction site</td>
+</tr>
+<tr class="even">
+<td><strong>RR</strong></td>
+<td>Rejection reason when no site is assigned</td>
+</tr>
+</tbody>
+</table>
+<p>Additionally information extracted from barcode information includes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>SamTag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>ep</strong></td>
+<td>Epitope, for example <em>H3K36me3</em> or <em>H3K27me3</em></td>
+</tr>
+<tr class="even">
+<td><strong>BC</strong></td>
+<td>All extracted tags for this read for example *DPM6F1</td>
+</tr>
+<tr class="odd">
+<td><strong>OK</strong></td>
+<td><em>1</em> when the demultiplexing of the barcodes succeeded, <em>0</em> otherwise</td>
+</tr>
+<tr class="even">
+<td><strong>SM</strong></td>
+<td>Cell/subsample to which the read is assigned</td>
+</tr>
+</tbody>
+</table>
+<p>The assigned restriction motifs can be visualized in a separate colour when selecting the “RZ” tag in IGV.</p>
+<p><img src="../assets/images/igv_bam_cutsites.png" class="img-fluid"></p>
+<p>Reads are deduplicated based on UMI, cut site location and barcodes.</p>
+<p>In IGV, the reads can be colored based on barcode by selecting <code>BC</code>. <a href="#tagged-bam-files" title="#tagged-bam-files">See here for a list of all tags</a></p>
+<p><img src="../assets/images/igv_bam_cutsites_bc.png" class="img-fluid"></p>
+<p>Only reads which are <strong>unique</strong> and do not have the <code>qcfail</code> tag are counted in the final count tables and coverage files.</p>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p>The workflow generates the following output folders:</p>
+<ul>
+<li><strong>tagged</strong> : The alignments of the reads, with SAM tags which indicate QC information</li>
+<li><strong>coverage</strong> : BigWig coverage tracks to visualize the coverage in a genome browser</li>
+<li><strong>loom</strong> : Count tables in an efficient data format</li>
+<li><strong>multiqc</strong> : Final report</li>
+<li><strong>pipeline_info</strong> : All technical information regarding the workflow run(s), exact tool versions and parameters</li>
+</ul>
+<section id="example-output-tree" class="level2">
+<h2 class="anchored" data-anchor-id="example-output-tree">Example Output Tree</h2>
+<pre><code>results/
+├── adapter_trimming
+│   ├── sample1_gDNA_S1_L001_R1_001.part_001.cutadapt.log
+│   └── sample1_gDNA_S1_L001_R1_001.part_001.trim.fastq.gz
+├── coverage
+│   └── gDNA
+│       ├── excluded
+│       │   └── sample1_demultiplexfail.bigWig
+│       ├── sample1_target1.bigWig
+│       └── sample1_target2.bigWig
+├── loom
+│   └── gDNA
+│       ├── sample1_target1_gDNA.loom
+│       └── sample1_target2_gDNA.loom
+├── multiqc
+│   ├── multiqc_data/
+│   └── multiqc_report.html
+├── pipeline_info
+│   ├── execution_report_YYYY-MM-DD_HH-MM-SS.html
+│   └── execution_trace_YYYY-MM-DD_HH-MM-SS.txt
+└── tagged
+    └── gDNA
+        ├── sample1_gDNA.tagged.bam
+        └── sample1_gDNA.tagged.bam.bai</code></pre>
+<pre><code>results/
+├── adapter_trimming
+│   ├── sample1_gDNA_S1_L001_R1_001.part_001.cutadapt.log
+│   └── sample1_gDNA_S1_L001_R1_001.part_001.trim.fastq.gz
+├── coverage
+│   └── gDNA
+│       ├── excluded
+│       │   └── sample1_demultiplexfail.bigWig
+│       ├── sample1_target1.bigWig
+│       └── sample1_target2.bigWig
+├── loom
+│   └── gDNA
+│       ├── sample1_target1_gDNA.loom
+│       └── sample1_target2_gDNA.loom
+├── multiqc
+│   ├── multiqc_data/
+│   └── multiqc_report.html
+├── pipeline_info
+│   ├── execution_report_YYYY-MM-DD_HH-MM-SS.html
+│   └── execution_trace_YYYY-MM-DD_HH-MM-SS.txt
+└── tagged
+    └── gDNA
+        ├── sample1_gDNA.tagged.bam
+        └── sample1_gDNA.tagged.bam.bai</code></pre>
+</section>
+<section id="output-data" class="level2">
+<h2 class="anchored" data-anchor-id="output-data">Output Data</h2>
+<section id="tagged-bam-files" class="level3">
+<h3 class="anchored" data-anchor-id="tagged-bam-files">Tagged BAM files</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>SamTag</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>ep</strong></td>
+<td>Epitope, for example <em>H3K36me3</em> or <em>H3K27me3</em>, defined in <a href="#well-to-target" title="#well-to-target">the well to target sheet</a> OR <a href="#dpm-to-target" title="#dpm-to-target">the DPM to target sheet</a></td>
+</tr>
+<tr class="even">
+<td><strong>BC</strong></td>
+<td>All extracted tags for this read for example <code>DPM6F1|NYBot56_Stg|Even2Bo85|Odd2Bo38|ConstantRCmin16|DPM6F</code></td>
+</tr>
+<tr class="odd">
+<td><strong>OK</strong></td>
+<td><em>1</em> when the demultiplexing of the barcodes succeeded, <em>0</em> otherwise</td>
+</tr>
+<tr class="even">
+<td><strong>SM</strong></td>
+<td>subsample (sm) and Cell to which the read is assigned</td>
+</tr>
+<tr class="odd">
+<td><strong>RX</strong></td>
+<td>Unique molecular identifier</td>
+</tr>
+<tr class="even">
+<td><strong>RG</strong></td>
+<td>Read group</td>
+</tr>
+<tr class="odd">
+<td><strong>sm</strong></td>
+<td>Subsample, this is the (sub)sample defined in <a href="#well-to-sample" title="#well-to-sample">the well to sample sheet</a></td>
+</tr>
+<tr class="even">
+<td><strong>RR</strong></td>
+<td>Rejection reason when read is not counted</td>
+</tr>
+</tbody>
+</table>
+<p><strong>gDNA:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>SamTag</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>DS</strong></td>
+<td>Center coordinate of the restriction site</td>
+</tr>
+<tr class="even">
+<td><strong>oD</strong></td>
+<td>Offset to the restriction site in bp</td>
+</tr>
+<tr class="odd">
+<td><strong>RZ</strong></td>
+<td>Motif of the restriction site</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="count-tables" class="level3">
+<h3 class="anchored" data-anchor-id="count-tables">Count Tables</h3>
+<p>Count tables are generated in LOOM format for downstream analysis.</p>
+<p>The LOOM files <strong>have one layer per restriction enzyme</strong>, the bin size is configurable in the config file (or can be passed using <code>--bin_size</code>). Each modality and subsample are stored in separate LOOM files.</p>
+<pre><code>sample = ad.io.read_loom('test.loom')
+sample[:,100:].var</code></pre>
+<pre><code>sample = ad.io.read_loom('test.loom')
+sample[:,100:].var</code></pre>
+<p><img src="../assets/images/loom.png" class="img-fluid"></p>
+</section>
+<section id="normalized-counts" class="level3">
+<h3 class="anchored" data-anchor-id="normalized-counts">Normalized Counts</h3>
+<p>For bulk samples where a control sample is provided the raw-count LOOM files are normalized and the normalized counts are stored in the folder <code>results/loom/gDNA_normalized</code></p>
+</section>
+<section id="statistics" class="level3">
+<h3 class="anchored" data-anchor-id="statistics">Statistics</h3>
+<p>In the folder <code>statistics</code> the statistics on the cell level are stored:</p>
+<pre><code>Sample1_A_H3K4me1_gDNA:
+  Average bins per cell: 12
+  Average reads per cell: 13
+  Maximum reads in a passing cell: 57
+  Minimum reads in a passing cell: 7
+  QC failing cells: 843
+  QC passing cells: 151</code></pre>
+<pre><code>Sample1_A_H3K4me1_gDNA:
+  Average bins per cell: 12
+  Average reads per cell: 13
+  Maximum reads in a passing cell: 57
+  Minimum reads in a passing cell: 7
+  QC failing cells: 843
+  QC passing cells: 151</code></pre>
+<p>And in the folder <code>tagged</code> the statistics on the read level:</p>
+<pre><code>overall_statistics:
+  Sample1_A_gDNA:
+    reads: 62469631
+    reads&gt;H3K27ac&gt;mapped: 1373240
+    reads&gt;H3K27ac&gt;mapped&gt;duplicate: 750900
+    reads&gt;H3K27ac&gt;mapped&gt;pass: 622340
+    reads&gt;H3K27me3&gt;mapped: 12950771
+    reads&gt;H3K27me3&gt;mapped&gt;duplicate: 7162070
+    reads&gt;H3K27me3&gt;mapped&gt;pass: 5788701
+    reads&gt;H3K36me3&gt;mapped: 23386928
+    reads&gt;H3K36me3&gt;mapped&gt;duplicate: 12936827
+    reads&gt;H3K36me3&gt;mapped&gt;pass: 10450101
+    reads&gt;not_demultiplexed: 5274</code></pre>
+<pre><code>overall_statistics:
+  Sample1_A_gDNA:
+    reads: 62469631
+    reads&gt;H3K27ac&gt;mapped: 1373240
+    reads&gt;H3K27ac&gt;mapped&gt;duplicate: 750900
+    reads&gt;H3K27ac&gt;mapped&gt;pass: 622340
+    reads&gt;H3K27me3&gt;mapped: 12950771
+    reads&gt;H3K27me3&gt;mapped&gt;duplicate: 7162070
+    reads&gt;H3K27me3&gt;mapped&gt;pass: 5788701
+    reads&gt;H3K36me3&gt;mapped: 23386928
+    reads&gt;H3K36me3&gt;mapped&gt;duplicate: 12936827
+    reads&gt;H3K36me3&gt;mapped&gt;pass: 10450101
+    reads&gt;not_demultiplexed: 5274</code></pre>
+<p>This means that <code>Sample1_A_gDNA</code> has 62469631 reads (after trimming). Of which 1373240 are mapped H3K27ac reads. 750900 of those reads are duplicate and 622340 are unique and associated to a restriction site.</p>
+</section>
+<section id="bigwig-tracks" class="level3">
+<h3 class="anchored" data-anchor-id="bigwig-tracks">BigWig tracks</h3>
+<p>The bigWig tracks show the coverage of reads with a proper motif. A bigwig file is produced for each combination of subsample and epitope.</p>
+<p><img src="../assets/images/igv_tracks.png" class="img-fluid"></p>
+</section>
+<section id="multiqc" class="level3">
+<h3 class="anchored" data-anchor-id="multiqc">MultiQC</h3>
+<p>Output files * <code>multiqc/</code> + <code>multiqc_report.html</code>: a standalone HTML file that can be viewed in your web browser. + <code>multiqc_data/</code>: directory containing parsed statistics from the different tools used in the pipeline. + <code>multiqc_plots/</code>: directory containing static images from the report.</p>
+<p><a href="http://multiqc.info" title="http://multiqc.info">MultiQC</a> is a reporting tool that generates a single HTML report summarising all samples in your project. Currently the report only lists the software versions. But this will likely be expanded later.</p>
+</section>
+<section id="pipeline-information" class="level3">
+<h3 class="anchored" data-anchor-id="pipeline-information">Pipeline information</h3>
+<p>Output files * <code>pipeline_info/</code> + Reports generated by Nextflow: <code>execution_report.html</code>, <code>execution_timeline.html</code>, <code>execution_trace.txt</code> and <code>pipeline_dag.dot</code>/<code>pipeline_dag.svg</code>. + Reports generated by the pipeline: <code>pipeline_report.html</code>, <code>pipeline_report.txt</code> and <code>software_versions.yml</code>. The <code>pipeline_report*</code> files will only be present if the <code>--email</code> / <code>--email_on_fail</code> parameter’s are used when running the pipeline. + Reformatted samplesheet files used as input to the pipeline: <code>samplesheet.valid.csv</code>. + Parameters used by the pipeline run: <code>params.json</code>.</p>
+</section>
+</section>
+</section>
+<section id="glossary" class="level1">
+<h1>Glossary</h1>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MAbID</strong></td>
+<td>Multiplexing Antibodies by barcode Identification</td>
+</tr>
+<tr class="even">
+<td><strong>DPM</strong></td>
+<td><strong>D</strong>NA <strong>P</strong>hosphate <strong>M</strong>odified adapter</td>
+</tr>
+<tr class="odd">
+<td><strong>RPM</strong></td>
+<td><strong>R</strong>NA <strong>P</strong>hosphate <strong>M</strong>odified adapter</td>
+</tr>
+<tr class="even">
+<td><strong>gDNA</strong></td>
+<td><strong>G</strong>enomic <strong>DNA</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Well</strong></td>
+<td>Location in a 96 well plate (e.g.&nbsp;A5)</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

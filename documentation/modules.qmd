@@ -1,0 +1,397 @@
+# Module Documentation
+
+This is a list of all modules used in the workflow.
+
+## DPM_FASTA_GENERATOR
+
+Calls the scellgen python script `scellgen_mabid_dpm_fasta_file_generator`.  
+
+Writes DPM and RPM barcode tag sequences present in a sprite config file to a FASTA file which [used for adapter trimming](#CUTADAPT_WITH_FASTA "#CUTADAPT_WITH_FASTA").  
+
+The tool extracts only DPM and RPM category sequences from the sprite configuration and generates both forward and reverse complement sequences. It supports adding suffixes (N's) to each DPM sequence.
+
+Used for: This module's outputs are used by the [CUTADAPT_WITH_FASTA](#CUTADAPT_WITH_FASTA "#CUTADAPT_WITH_FASTA") module.
+
+### Inputs
+
+* `trim_n_dpm_suffix_bases` - Number of bases to trim from the end of the DPM sequence. 0 by default.
+* `sprite_config` - Path to the sprite config file
+
+### Parameters
+
+* `--suffix` - Suffix sequence behind the DPM sequences to trim away (usually just N's). The number of N's is determined by the `trim_n_dpm_suffix_bases` setting which is specified in the adapter_config file. In the excel sheet this value can be found in the tab "Adapter Config" in the row "TRIM_N_DPM_SUFFIX_BASES". If the value is 0, no additional trimming beyond the DPM sequence is performed.
+
+### Outputs
+
+* `fasta_out` - Path to the FASTA file to write the DPM/RPM sequences to
+* `reverse_comp_fasta_out` - Path to the FASTA file to write the reverse complement of the DPM/RPM sequences to
+
+---
+
+## SEQKIT_SPLIT2
+
+Uses the nf-core seqkit module to split large FASTQ files into smaller chunks for massive parallel processing. It splits both single-end and paired-end FASTQ files into smaller chunks which are processed in parallel by downstream modules.
+
+Used for: This module's outputs are used by the [SPRITE_BARCODE](#SPRITE_BARCODE "#SPRITE_BARCODE") module.
+
+### Inputs
+
+* `reads` - Path to input FASTQ files (can be single-end or paired-end)
+
+### Parameters
+
+* `--by-size 5000000` to split files into chunks of approximately 5M reads, increasing this value leads to decreased parallelization but less overhead on setup time.
+
+### Outputs
+
+* `reads` - Output directory containing split FASTQ files ready for parallel processing
+
+---
+
+## SPRITE_BARCODE
+
+This module uses the [BarcodeIdentification.jar](https://github.com/GuttmanLab/sprite-pipeline/tree/master/scripts/java "https://github.com/GuttmanLab/sprite-pipeline/tree/master/scripts/java") tool from the GuttmanLab sprite-pipeline (version 1.2.0) to identify barcodes in sequencing reads. It processes paired-end FASTQ files and identifies the barcode types: DPM, RPM, ODD, EVEN, Y, and LIGTAG based on the sprite configuration file. The tool encodes identified barcodes directly into the FASTQ read headers with format "original_header::[tag1][tag2][tag3]" where each tag is enclosed in square brackets.
+
+Used for: This module's outputs are used by the [READ_RECODER](#READ_RECODER "#READ_RECODER") module.
+
+### Inputs
+
+* `sprite_config` - Path to sprite configuration file defining barcode layouts and sequences
+* `r1_file` - Read 1 FASTQ file
+* `r2_file` - Read 2 FASTQ file
+
+### Parameters
+
+* None
+
+### Outputs
+
+* `sprite_fastqs` - Output FASTQ files with barcode information encoded in headers in format:`original_header::[DPM_tag][ODD_tag][EVEN_tag]` where tags are identified barcodes enclosed in square brackets, and `[NOT_FOUND]` for unidentifiable barcodes
+
+---
+
+## READ_RECODER
+
+Calls the scellgen python script `scellgen_mabid_read_recoder`.  
+
+Reads in a pair of FASTQ files ([encoded by the sprite demultiplexer](#sprite_barcode "#sprite_barcode")) and outputs a pair of FASTQ files with the read names recoded. The tool extracts UMI sequences from reads (`R0:UMI_start_position; RX:UMI_sequence`), applies sample barcodes, and adds metadata tags to the read headers based on the sprite configuration. It validates read fragments based on sprite configuration (depending on the adapter config some tags might be required and some not) and generates statistics on usable/unusable reads which are written to `stats`.
+
+Used for: This module's outputs are used by the [CUTADAPT_WITH_FASTA](#CUTADAPT_WITH_FASTA "#CUTADAPT_WITH_FASTA") module.
+
+### Inputs
+
+* `r1_in` - Path to the read 1 FASTQ file
+* `r2_in` - Path to the read 2 FASTQ file
+* `multiplexer` - The multiplexer used to generate the reads. Currently only "mabid" is supported
+* `library` - The library name to use in the read names
+* `sprite_config` - Path to the sprite config file, the script uses this to determine the adapter / UMI configuration and the sample mapping
+
+### Parameters
+
+* None
+
+### Outputs
+
+* `r1_out` - Path to the output recoded read 1 FASTQ file with `key:value;` header format: `original_header::SM:sample;BC:barcode;OK:0`;
+* `r2_out` - Path to the output recoded read 2 FASTQ file with same header format
+* `stats` - Path to the output stats file, this is a YAML file with the number of usable and unusable reads. Reads can be rejected for missing or invalid (short/long) UMI sequences, missing tags or failed demultiplexing.
+
+---
+
+## CUTADAPT_WITH_FASTA
+
+Uses the nf-core cutadapt module to trim adapter sequences from FASTQ reads using FASTA files containing adapter sequences. It is used to remove the adapter remnants by looking for the DPM/RPM sequences, and the smDPM (`AAACACCCAAGACT`) for gDNA and removing everything downstream. Only R1 is trimmed, R2 is not processed.
+
+Used for: This module's outputs are used by the [STAR_ALIGN_gDNA](#STAR_ALIGN_gDNA "#STAR_ALIGN_gDNA"), and [MINIMAP2_ALIGN](#MINIMAP2_ALIGN "#MINIMAP2_ALIGN") modules.
+
+### Inputs
+
+* `adapters_fasta` - Path to FASTA file containing 5' adapter sequences
+* `adapters_fasta_rev` - Path to FASTA file containing 3' adapter sequences
+* `reads` - Path to input FASTQ files (can be single-end or paired-end)
+
+### Parameters
+
+Cutadapt parameters including error rate (`max_error_rate=0.15`), number of adapters (`-n`), minimum length (`-m`) as specified in the module configuration file.  
+
+For gDNA: `-n 3 -m 12 -a AAACACCCAAGACT`
+
+### Outputs
+
+* `reads` - Output trimmed FASTQ files (*.trim.fastq.gz)
+* `log` - Cutadapt log files containing trimming statistics
+
+---
+
+## PREPARE_GENOME
+
+This subworkflow prepares the annotations: the input of the workflow can be either a GTF or GFF file. A STAR index is created when needed.
+
+Used for: This module's outputs are used by the [MINIMAP2_ALIGN](#MINIMAP2_ALIGN "#MINIMAP2_ALIGN"), [STAR_ALIGN_gDNA](#STAR_ALIGN_gDNA "#STAR_ALIGN_gDNA"), and [GDNA_TO_LOOM](#GDNA_TO_LOOM "#GDNA_TO_LOOM") modules.
+
+### Inputs
+
+* `fasta` - Reference genome FASTA file
+* `gtf` - GTF annotation file
+* `gff` - GFF annotation file
+* `star_index` - Pre-built STAR index (optional)
+* `require_star_index` - Whether STAR index is required
+
+### Parameters
+
+* None
+
+### Outputs
+
+* `fasta` - Processed reference genome FASTA file
+* `gtf` - Processed GTF annotation file
+* `fai` - FAI index file
+* `chrom_sizes` - Chromosome sizes file
+* `star_index` - STAR index directory
+
+---
+
+## MINIMAP2_ALIGN
+
+This uses the nf-core minimap2 module to align reads to a reference genome using the minimap2 aligner.  
+
+Used for: This module's outputs are used by the [BAM_SET_TAGS_FROM_QUERY](#BAM_SET_TAGS_FROM_QUERY "#BAM_SET_TAGS_FROM_QUERY") module.
+
+### Inputs
+
+* `reads` - Path to input reads (FASTQ files)
+* `reference` - Path to reference genome
+
+### Parameters
+
+* `cigar_bam` - Whether to include CIGAR in BAM format
+
+### Outputs
+
+* `bam` - Output BAM file (if bam_format is true)
+* `index` - BAM index file
+
+---
+
+
+## BAM_SET_TAGS_FROM_QUERY
+
+Used for [SAMTOOLS_MERGE_gDNA](#SAMTOOLS_MERGE_gDNA "#SAMTOOLS_MERGE_gDNA").
+
+This module wraps the tool `bamsettagsfromquery` which parses read names containing encoded metadata and converts them into proper SAM tags. It transforms read headers with key-value pair format `query_name::SM:sample;OK:1;LY:library` into separate BAM tags `SM:Z:sample`, `OK:i:1`, `LY:Z:library` while setting the original query name (before the colons) as the read name.
+
+### Inputs
+
+* `bam_in` - path to the input BAM file with encoded read headers
+
+### Parameters
+
+* None
+
+### Outputs
+
+* `sample_tagged_bam` - output BAM file with SAM tags set from parsed read headers. Tags include: `SM` (Sample), `OK` (demultiplexing success 0/1), `LY` (Library), and `RX` (UMI sequence if present)
+
+---
+
+## SAMTOOLS_MERGE_gDNA
+
+This uses the nf-core samtools merge module to merge multiple BAM files into a single BAM file. Multiple files BAM files are generated because the input data is chunked to allow parallel processing.  
+
+Used for: This module's outputs are used by the [TAG_gDNA](#TAG_gDNA "#TAG_gDNA") module.
+
+### Inputs
+
+* `input_files` - List of BAM files to merge
+* `fasta` - Reference FASTA file (optional)
+* `fai` - Reference FAI index file (optional)
+* `gzi` - Reference GZI index file (optional)
+
+### Parameters
+
+* None
+
+### Outputs
+
+* `bam` - Merged BAM file
+* `csi` - CSI index file
+
+---
+
+
+## TAG_gDNA
+
+This calls the scellgen python script `scellgen_mabid_read_tagger`.  
+
+Tags gDNA BAM files with additional information based on sprite configuration and reference genome. It identifies cut sites near restriction motifs (such as the default TGCA for HpyCH4V and AGCT for AluI) and adds specific SAM tags for genomic DNA analysis. The tool also performs QC filtering for splice evidence and low mapping quality reads, and deduplicates reads for single-cell libraries. It adds sample metadata tags to reads and supports haplotype-specific analysis (Note this is not yet supported by the rest of the workflow).
+
+The following SAM tags are written (if applicable): `DS` (DigestSite, this is the restriction site position), `oD` (offset to restriction site), `RZ` (Restriction motif), `RR` (Rejection reason), `ep` (epitope), `sm` (subsample), `we` (well), `HP` (Haplotype), `RG` (Read Group), `SM` (Sample)
+
+This module is used as input to the [GDNA_TO_LOOM](#GDNA_TO_LOOM "#GDNA_TO_LOOM") and [DEEPTOOLS_BAMCOVERAGE_gDNA](#DEEPTOOLS_BAMCOVERAGE_gDNA "#DEEPTOOLS_BAMCOVERAGE_gDNA") modules.
+
+Used for: This module's outputs are used by the [GDNA_TO_LOOM](#GDNA_TO_LOOM "#GDNA_TO_LOOM") and [DEEPTOOLS_BAMCOVERAGE_gDNA](#DEEPTOOLS_BAMCOVERAGE_gDNA "#DEEPTOOLS_BAMCOVERAGE_gDNA") modules.
+
+### Inputs
+
+* `bam` - Path to the input BAM file
+* `bam_index` - Path to the BAM index file
+* `sprite_config` - Path to the sprite configuration file
+* `reference_fasta` - Path to the reference FASTA file
+
+### Parameters
+
+* `--motif` - Restriction motif to search for (by default `TGCA`, `AGCT`)
+* `--min-mapping-quality` - Minimum mapping quality for a mapped read to be taken into account
+* `--max_motif_distance_upstream` - Maximum distance upstream of R1 start to consider restriction site
+* `--max_motif_distance_downstream` - Maximum distance downstream of R1 start to consider restriction site
+
+### Outputs
+
+* `gdna_tagged_bam` - Output tagged BAM file
+* `gdna_tag_stats` - Output statistics YAML file
+
+---
+
+
+## GDNA_TO_LOOM
+
+This calls the scellgen python script `scellgen_gdna_to_loom`.  
+
+Extracts a (genomic) binned count table in LOOM format from a tagged gDNA BAM file.  
+
+Determines the number of restriction motifs per bin and writes this to the var meta table of the LOOM file.  
+
+Cells are classified as pass or background using a Gaussian Mixture Model.
+
+Used for: This module's outputs are used by the [GDNA_NORMALIZE](#GDNA_NORMALIZE "#GDNA_NORMALIZE") and [LOOM_STATS](#LOOM_STATS "#LOOM_STATS") modules.
+
+### Inputs
+
+* `bam` - Path to the input BAM file containing DS (DigestSite), RZ (Restriction motif), and BC (Barcode) tags
+* `bam_index` - Path to the BAM index file
+* `reference_fasta` - Path to the reference FASTA file
+* `reference_fai` - Path to the reference FAI index file
+
+### Parameters
+
+* `--bin_size` - Size of genomic bins for counting (default: 5000)
+* `--motif` - Restriction motifs to consider (e.g., TGCA:HpyCH4V, AGCT:AluI)
+* `--min_counts_threshold` - Minimum counts threshold for background flagging
+
+### Outputs
+
+* `loom` - Output LOOM file containing count matrices with cell metadata and genomic bin attributes
+
+---
+
+
+## LOOM_STATS
+
+This calls the scellgen python script `scellgen_loom_statistics`.  
+
+Generates statistics from LOOM files, genererates a YAML file with QC metrics and summary information about the data. The tool calculates QC passing/failing cell counts, computes average reads per cell, determines average bins (gDNA) per cell, and finds minimum and maximum reads in cells.
+
+### Inputs
+
+* `loom` - Path to the input LOOM file
+
+### Parameters
+
+* `modality` - Data modality (gDNA)
+* `description` - Header for the YAML output
+
+### Outputs
+
+* `yaml_file` - Output statistics YAML file containing metrics: QC passing cells, QC failing cells, Average reads per cell, Average bins per cell (gDNA), Minimum/maximum reads in passing cells
+
+---
+
+## GDNA_NORMALIZE
+
+This calls the scellgen python script `scellgen_normalize_bulk`.  
+
+Performs bulk normalization of gDNA LOOM files using control samples, implementing the same normalization procedure as in load_mabid.R from MAb-ID. The tool computes Observed/Expected (OE) values using a **BULK** signal and control LOOM file.
+
+### Inputs
+
+* `signal_loom` - Path to the signal LOOM file
+* `control_loom` - Path to the control LOOM file
+
+### Parameters
+
+* `mapp0_2_oe0` - Whether to set OE to 0 where control is 0 (default: True)
+
+### Outputs
+
+* `normalized_loom` - Output normalized LOOM file with OE (Observed/Expected) values
+
+---
+
+## MERGE_YAML
+
+This calls the scellgen python script `scellgen_merge_yaml`.  
+
+Merges multiple YAML files by summing overlapping numeric values, this is used to combine statistics from multiple samples. The tool recursively merges dictionaries and sums numeric values with the same keys. It merges multiple YAML files into a single file, recursively combines nested dictionaries, sums numeric values with identical keys, and preserves non-conflicting keys from all files.
+
+### Inputs
+
+* `input_files` - Paths to input YAML files
+
+### Parameters
+
+* None
+
+### Outputs
+
+* `yaml_file` - Output merged YAML file with summed overlapping numeric values
+
+---
+
+## DEEPTOOLS_BAMCOVERAGE_gDNA
+
+This uses the nf-core deeptools bamCoverage module to generate coverage files (bigwig) from BAM files. It normalizes the coverage to CPM (Counts Per Million). Note that the coverage from this module only includes QC pass reads.
+
+### Inputs
+
+* `input` - Input BAM file
+* `input_index` - Input BAM index file
+* `fasta` - Reference FASTA file (optional)
+* `fasta_fai` - Reference FAI index file (optional)
+* `blacklist` - Blacklist regions file (optional)
+
+### Parameters
+
+* Deeptools bamCoverage parameters, `-normalizeUsing CPM --binSize 100 --outFileFormat bigwig --samFlagExclude 1536` are default
+
+### Outputs
+
+* `bigwig` - Output BigWig coverage file
+
+---
+
+## DEEPTOOLS_BAMCOVERAGE_gDNA_nofilter
+
+This uses the nf-core deeptools bamCoverage module to generate coverage files (bigwig) from BAM files. It normalizes the coverage to CPM (Counts Per Million). This module is used to include QC-fail reads. This module is used to visualize the coverage of reads which are not demultiplexable (thus QC fail).
+
+### Inputs
+
+* `input` - Input BAM file
+* `input_index` - Input BAM index file
+* `fasta` - Reference FASTA file (optional)
+* `fasta_fai` - Reference FAI index file (optional)
+* `blacklist` - Blacklist regions file (optional)
+
+### Parameters
+
+* Deeptools bamCoverage parameters, `-normalizeUsing CPM --binSize 100 --outFileFormat bigwig` are default
+
+### Outputs
+
+* `bigwig` - Output BigWig coverage file
+
+---
+
+## MULTIQC
+
+This uses the nf-core multiqc module to aggregate results from multiple tools into a single HTML report. Currently this just lists the software versions, but this might be expanded in the future to include more detailed results.
+
