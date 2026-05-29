@@ -3,8 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Chromaplex"
-  title-template: "{title} - {site}"
+  title: ""
   navbar:
     logo: assets/images/sCellgen_logo.svg
     background: primary
