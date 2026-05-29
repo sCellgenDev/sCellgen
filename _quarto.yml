@@ -3,16 +3,23 @@ project:
   output-dir: docs
 
 website:
-  title: "ChromaPlex Software"
+  title: ""
   navbar:
+    logo: assets/images/sCellgen_logo.svg
     background: primary
+    left:
+      - text: "Workflow"
+        file: documentation/workflow.qmd
+      - text: "Module Documentation"
+        file: documentation/modules.qmd
 
 format:
   html:
     theme:
       light: flatly
-      dark: cyborg
+      dark: darkly
     toc: true
     toc-location: left
     code-fold: true
     highlight-style: breeze
+    css: assets/css/styles.css
