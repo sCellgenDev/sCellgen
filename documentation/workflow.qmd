@@ -1,3 +1,4 @@
+
 # MAbID Workflow Overview
 
 Multiplexing Antibodies by barcode Identification (MAbID) is a method for combinatorial genomic profiling of histone modifications and chromatin-binding proteins. MAbID employs antibody-DNA conjugates to integrate barcodes at the genomic location of the epitope, enabling combined incubation of multiple antibodies to reveal the distributions of many epigenetic markers simultaneously.

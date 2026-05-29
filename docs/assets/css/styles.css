@@ -32,3 +32,8 @@ body {
 h1, h2, h3, h4, h5, h6, .code-block, pre, .navbar {
   text-align: left !important;
 }
+
+/* Hides the title block container if it still occupies space */
+.quarto-title-block {
+  display: none !important;
+}
