@@ -3,3 +3,5 @@
 .DS_Store
 /assets/vectors/
 /docs/
+/.vscode/
+/.continue/
